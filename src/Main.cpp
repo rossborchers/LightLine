@@ -4,8 +4,9 @@
 #include "Engine/Systems/World/World.hpp"
 #include "Engine/Time.hpp"
 
-
 #include "Game/WaveScene.hpp"
+
+#define LED_STRIP_LENGTH 20
 
 //Systems
 SRenderer* _renderer = nullptr;
@@ -31,7 +32,7 @@ void SetScene(Scene* scene)
 void setup() 
 {
   //Setup systems
-  _renderer = new SRenderer();
+  _renderer = new SRenderer(LED_STRIP_LENGTH);
   _world = new SWorld();
  
   //Init time for first loop
@@ -46,7 +47,7 @@ void loop()
     Time time;
     _lastMicros = _currentMicros;
     _currentMicros = micros(); 
-    unsigned long deltaMicros = _lastMicros - _currentMicros;
+    unsigned long deltaMicros = _currentMicros - _lastMicros;
     time.DeltaTime = deltaMicros / (double)1000000;
     time.Time = _currentMicros / (double)1000000;
 

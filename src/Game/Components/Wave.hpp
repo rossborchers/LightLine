@@ -1,20 +1,23 @@
-#ifndef CWAVE_HPP
-#define CWAVE_HPP
+#ifndef OWAVE_HPP
+#define OWAVE_HPP
 
-#include <string>
-#include "../../Engine/Components/Component.hpp"
+#include <vector>
+#include "../../Engine/Systems/World/WorldObject.hpp"
 
-class CWave : public CComponent
+
+class OWave : public WorldObject
 {
   public:
     void Update(Time time) override
     {
+      Position += time.DeltaTime * 2;
       
     }
 
-    std::string TypeID() override
+    void Render(std::vector<CRGB>& leds) override
     {
-        return "CWave";
+       int pos = ((int)Position) % leds.size();
+       leds[pos] = CRGB::Red;
     }
 };
 

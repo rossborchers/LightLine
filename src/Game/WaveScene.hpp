@@ -10,8 +10,8 @@ class WaveScene : public Scene
     public:
      void Construct(SWorld* world) override
      {
-        WorldObject* waveObj = world->CreateWorldObject();
-        CWave* wave = (CWave*)waveObj->AddComponent(new CWave());
+        OWave* wave = new OWave();
+        world->AddWorldObject(wave);
      }
 };
 

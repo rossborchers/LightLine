@@ -1,81 +1,40 @@
 #ifndef S_WORLD_HPP
 #define S_WORLD_HPP
 
-#include "../../Components/Transform.hpp"
 #include "../../Time.hpp"
-
 #include "WorldObject.hpp"
 
 class SWorld
 {
+    friend class SRenderer;
+    
     public:
-  
-SWorld()
-{
-    _root = new CTransform();
-    _root->WorldObject = nullptr;
-    _root->LocalPosition = 0;
-}
 
-void Update(Time time)
-{
-     UpdateHeirachy(_root, _root->LocalPosition);
-     UpdateSimulation(_root, time);
-}
-
-
-void Clear()
-{
-    //TODO:
-}
-
-WorldObject* CreateWorldObject()
-{
-    //Always need a transform!
-    WorldObject* worldObject = new WorldObject();
-    CTransform* trans = worldObject->AddComponent(new CTransform());
-    trans->WorldObject = worldObject;
-    _root->AddChild(trans);
-    return worldObject;
-}
-
-   private:
-
-    void UpdateHeirachy(CTransform* trans, int basis)
+    void AddWorldObject(WorldObject* worldObject)
     {
-        std::vector<CTransform*> children = trans->GetChildren();
-        for(int i = 0 ; i < children.size(); i++)
+        _worldObjects.push_back(worldObject);
+    }
+
+    void Update(Time time)
+    {
+        for(int i = 0; i < _worldObjects.size(); i++)
         {
-            children[i]->LossyGlobalPosition = basis + children[i]->LocalPosition;
-            UpdateHeirachy(children[i], children[i]->LossyGlobalPosition);
+            _worldObjects[i]->Update(time);
         }
     }
 
-     void UpdateSimulation(CTransform* trans, Time time)
+    void Clear()
     {
-        if(trans == nullptr)
+        for(int i = 0; i < _worldObjects.size(); i++)
         {
-            return;
+            delete _worldObjects[i];
         }
-
-        if(trans->WorldObject != nullptr)
-        {
-            std::vector<CComponent*> components = trans->WorldObject->_components;
-            for(int c = 0 ; c < components.size(); c++) //get it ha
-            {
-                components[c]->Update(time);
-            }
-        }
-       
-
-        std::vector<CTransform*> children = trans->GetChildren();
-        for(int i = 0 ; i < children.size(); i++)
-        {
-            UpdateSimulation(children[i], time);
-        }
+        _worldObjects.clear();
     }
 
-   CTransform* _root;
+    private:
+
+    std::vector<WorldObject*> _worldObjects;
 };
 
 

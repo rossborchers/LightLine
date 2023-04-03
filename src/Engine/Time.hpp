@@ -8,6 +8,4 @@ struct Time
     double TimeScale;
 };
 
-
-
 #endif
